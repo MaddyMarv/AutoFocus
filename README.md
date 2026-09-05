@@ -1,7 +1,7 @@
 ### [AutoFocus](https://www.nexusmods.com/warhammer40kdarktide/mods/EXAMPLE)
 <img width="975" height="510" alt="image" src="https://github.com/user-attachments/assets/383591fc-4438-482a-b4a9-6d0feb8c1f27" />
 
-Standalone mod that automatically brings the Darktide game window into view over other tabs when important events occur. Perfect for when you tab out while waiting for a mission vote, lobby loading, respawn timer, or waiting for your team to reach your respawn point.
+Standalone mod that automatically brings the Darktide game window into view over other tabs when important events occur. Perfect for when you tab out while waiting for a mission vote, lobby loading, or waiting for your team to reach your respawn point.
 
 **Options:**
 - Focus Method [Full Focus (Bring to Front & Grab Input), Bring to View (Don't Steal Input), Flash Taskbar Only]
