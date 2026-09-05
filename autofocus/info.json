@@ -7,7 +7,7 @@
     "funding": {
         "kofi": "https://ko-fi.com/indicabunny"
     },
-    "description": "Automatically brings the game window into view over other tabs or flashes the taskbar when taking hits/damage, when a mission vote starts, when loading into the pre-mission lobby, when spawning into a mission, or when rescued/revived.",
+    "description": "Standalone mod that automatically brings the Darktide game window into view over other tabs when important events occur. Perfect for when you tab out while waiting for a mission vote, lobby loading, or waiting for your team to reach your respawn point.",
     "order": {
         "require": [],
         "this_before": [],
