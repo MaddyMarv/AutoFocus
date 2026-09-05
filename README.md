@@ -1,5 +1,5 @@
 ### [AutoFocus](https://www.nexusmods.com/warhammer40kdarktide/mods/EXAMPLE)
-<img width="1121" height="555" alt="image" src="https://github.com/user-attachments/assets/d806448f-a4be-43c4-b0e2-dbbc34491af2" />
+<img width="975" height="510" alt="image" src="https://github.com/user-attachments/assets/383591fc-4438-482a-b4a9-6d0feb8c1f27" />
 
 Standalone mod that automatically brings the Darktide game window into view over other tabs or flashes the taskbar when important events occur. Perfect for when you tab out while waiting for a mission vote, lobby loading, respawn timer, or waiting for your team to reach your rescue beacon. It uses native Win32 calls to pop Darktide over browser tabs, Discord, and other windows when needed, bypassing Windows focus-stealing restrictions.
 
