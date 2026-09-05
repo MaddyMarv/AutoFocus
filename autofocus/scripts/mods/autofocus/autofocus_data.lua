@@ -22,49 +22,55 @@ return {
 						},
 					},
 					{
-						setting_id = "trigger_on_hit",
-						type = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id = "trigger_rescued",
-						type = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id = "trigger_rescue_started",
-						type = "checkbox",
-						default_value = false,
-					},
-					{
-						setting_id = "trigger_revived_downed",
-						type = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id = "trigger_respawned_hogtied",
-						type = "checkbox",
-						default_value = false,
-					},
-					{
-						setting_id = "trigger_mission_vote",
-						type = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id = "trigger_pre_mission_lobby",
-						type = "checkbox",
-						default_value = true,
-					},
-					{
-						setting_id = "trigger_spawn_mission",
-						type = "checkbox",
-						default_value = true,
-					},
-					{
 						setting_id = "play_sound",
 						type = "checkbox",
 						default_value = true,
+					},
+					{
+						setting_id = "triggers_group",
+						type = "group",
+						sub_widgets = {
+							{
+								setting_id = "trigger_on_hit",
+								type = "checkbox",
+								default_value = true,
+							},
+							{
+								setting_id = "trigger_rescued",
+								type = "checkbox",
+								default_value = true,
+							},
+							{
+								setting_id = "trigger_rescue_started",
+								type = "checkbox",
+								default_value = false,
+							},
+							{
+								setting_id = "trigger_revived_downed",
+								type = "checkbox",
+								default_value = true,
+							},
+							{
+								setting_id = "trigger_respawned_hogtied",
+								type = "checkbox",
+								default_value = false,
+							},
+							{
+								setting_id = "trigger_mission_vote",
+								type = "checkbox",
+								default_value = true,
+							},
+							{
+								setting_id = "trigger_pre_mission_lobby",
+								type = "checkbox",
+								default_value = true,
+							},
+							{
+								setting_id = "trigger_spawn_mission",
+								type = "checkbox",
+								default_value = true,
+							},
+						},
 					},
 				},
 			},

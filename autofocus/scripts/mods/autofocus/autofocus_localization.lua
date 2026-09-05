@@ -23,29 +23,32 @@ return {
 	option_flash_only = {
 		en = "Flash Taskbar Only",
 	},
+	triggers_group = {
+		en = "Triggers",
+	},
 	trigger_on_hit = {
-		en = "Trigger: When Hit / Taking Damage",
+		en = "When Hit / Taking Damage",
 	},
 	trigger_rescued = {
-		en = "Trigger: When Rescued",
+		en = "When Rescued",
 	},
 	trigger_rescue_started = {
-		en = "Trigger: When Teammate Starts Rescuing",
+		en = "When Teammate Starts Rescuing",
 	},
 	trigger_revived_downed = {
-		en = "Trigger: When Revived (Downed/Netted/Ledge)",
+		en = "When Revived (Downed/Netted/Ledge)",
 	},
 	trigger_respawned_hogtied = {
-		en = "Trigger: When Respawned Awaiting Rescue",
+		en = "When Respawned Awaiting Rescue",
 	},
 	trigger_mission_vote = {
-		en = "Trigger: When Asked to Accept Mission",
+		en = "When Asked to Accept Mission",
 	},
 	trigger_pre_mission_lobby = {
-		en = "Trigger: When Loading into Pre-Mission Lobby",
+		en = "When Loading into Pre-Mission Lobby",
 	},
 	trigger_spawn_mission = {
-		en = "Trigger: When Spawning into Mission",
+		en = "When Spawning into Mission",
 	},
 	play_sound = {
 		en = "Play Audio Alert",
