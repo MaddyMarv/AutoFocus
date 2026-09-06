@@ -1,4 +1,4 @@
-Standalone mod that automatically brings the Darktide game window into view over other tabs when important events occur. Perfect for when you tab out while waiting for a mission vote, lobby loading, or waiting for your team to reach your respawn point.
+Brings Darktide to the front when important events happen (matchmaking, loading into a lobby, taking damage, or being rescued).
 
 [b]Options:[/b]
 
