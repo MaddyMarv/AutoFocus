@@ -12,10 +12,15 @@ if ffi then
 
 			HWND GetForegroundWindow(void);
 			BOOL SetForegroundWindow(HWND hWnd);
+			HWND SetActiveWindow(HWND hWnd);
+			HWND SetFocus(HWND hWnd);
+			DWORD GetWindowThreadProcessId(HWND hWnd, DWORD* lpdwProcessId);
+			DWORD GetCurrentThreadId(void);
+			BOOL AttachThreadInput(DWORD idAttach, DWORD idAttachTo, BOOL fAttach);
+			void keybd_event(unsigned char bVk, unsigned char bScan, DWORD dwFlags, unsigned long dwExtraInfo);
 			BOOL ShowWindow(HWND hWnd, int nCmdShow);
 			BOOL SetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags);
 			BOOL BringWindowToTop(HWND hWnd);
-			void SwitchToThisWindow(HWND hWnd, BOOL fUnknown);
 			HWND FindWindowA(const char* lpClassName, const char* lpWindowName);
 		]]
 	end)
@@ -102,25 +107,106 @@ local function trigger_focus(ignore_current_focus)
 		return
 	end
 
-	if rawget(_G, "Window") and Window.set_focus then
-		Window.set_focus()
-	end
-
 	if ffi then
 		local hwnd = get_darktide_hwnd()
 
 		if hwnd and hwnd ~= ffi.cast("HWND", 0) then
+			local fg_wnd = ffi.C.GetForegroundWindow()
+			local fg_thread = (fg_wnd and fg_wnd ~= ffi.cast("HWND", 0)) and ffi.C.GetWindowThreadProcessId(fg_wnd, nil) or 0
+			local cur_thread = ffi.C.GetCurrentThreadId()
+
+			if fg_thread ~= 0 and fg_thread ~= cur_thread then
+				ffi.C.AttachThreadInput(cur_thread, fg_thread, 1)
+			end
+
+			ffi.C.keybd_event(0x12, 0, 2, 0)
+
 			ffi.C.ShowWindow(hwnd, SW_RESTORE)
 			ffi.C.SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW)
 			ffi.C.SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW)
 			ffi.C.BringWindowToTop(hwnd)
 			ffi.C.SetForegroundWindow(hwnd)
-			ffi.C.SwitchToThisWindow(hwnd, 1)
+			ffi.C.SetActiveWindow(hwnd)
+			ffi.C.SetFocus(hwnd)
+
+			if fg_thread ~= 0 and fg_thread ~= cur_thread then
+				ffi.C.AttachThreadInput(cur_thread, fg_thread, 0)
+			end
+		end
+	end
+
+	if rawget(_G, "Window") then
+		if Window.set_foreground then
+			Window.set_foreground()
+		end
+
+		if Window.set_focus then
+			Window.set_focus()
+		end
+
+		if Window.set_mouse_focus then
+			Window.set_mouse_focus(true)
+		end
+
+		local input_manager = Managers.input
+		local cursor_active = input_manager and input_manager:cursor_active()
+		if not cursor_active then
+			if Window.set_clip_cursor then
+				Window.set_clip_cursor(true)
+			end
+
+			if Window.set_show_cursor then
+				Window.set_show_cursor(false)
+			end
 		end
 	end
 end
 
 mod.trigger_focus = trigger_focus
+
+local INCAPACITATED_STATES = {
+	knocked_down = true,
+	netted = true,
+	ledge_hanging = true,
+	ledge_hanging_falling = true,
+	hogtied = true,
+	dead = true,
+	pounced = true,
+	mutant_charged = true,
+	consumed = true,
+	grabbed = true,
+	warp_grabbed = true,
+}
+
+local HELPED_STATES = {
+	knocked_down = true,
+	netted = true,
+	ledge_hanging = true,
+	pounced = true,
+	warp_grabbed = true,
+}
+
+local RELEASED_STATES = {
+	mutant_charged = true,
+	consumed = true,
+	grabbed = true,
+}
+
+local function is_player_incapacitated(player_unit)
+	if not player_unit or not Unit.alive(player_unit) then
+		return true
+	end
+
+	local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
+	if not unit_data_extension then
+		return false
+	end
+
+	local character_state_component = unit_data_extension:read_component("character_state")
+	local state_name = character_state_component and character_state_component.state_name
+
+	return state_name and INCAPACITATED_STATES[state_name] or false
+end
 
 local previous_state = nil
 local was_being_assisted = false
@@ -154,13 +240,17 @@ mod.update = function(dt)
 		return
 	end
 
+	local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
+	local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
+	local current_state = character_state_component and character_state_component.state_name
+
 	local health_extension = ScriptUnit.has_extension(player_unit, "health_system")
 	local toughness_extension = ScriptUnit.has_extension(player_unit, "toughness_system")
 
 	local current_health = health_extension and health_extension:current_health()
 	local current_toughness = toughness_extension and toughness_extension:current_toughness_percent()
 
-	if mod:get("trigger_on_hit") and not was_dead then
+	if mod:get("trigger_on_hit") and not was_dead and not (current_state and INCAPACITATED_STATES[current_state]) then
 		if previous_health and current_health and (previous_health - current_health > 0.01) then
 			trigger_focus()
 		elseif previous_toughness and current_toughness and (previous_toughness - current_toughness > 0.001) then
@@ -182,19 +272,11 @@ mod.update = function(dt)
 		end
 	end
 
-	local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
-	if not unit_data_extension then
-		return
-	end
-
-	local character_state_component = unit_data_extension:read_component("character_state")
-	local current_state = character_state_component and character_state_component.state_name
-
 	if not current_state then
 		return
 	end
 
-	local assisted_state_input = unit_data_extension:read_component("assisted_state_input")
+	local assisted_state_input = unit_data_extension and unit_data_extension:read_component("assisted_state_input")
 	local is_being_assisted = assisted_state_input and assisted_state_input.in_progress or false
 
 	if previous_state == "hogtied" and current_state ~= "hogtied" then
@@ -209,9 +291,16 @@ mod.update = function(dt)
 		end
 	end
 
-	local is_incapacitated = previous_state == "knocked_down" or previous_state == "netted" or previous_state == "ledge_hanging"
-	if is_incapacitated and current_state ~= previous_state and current_state ~= "dead" and current_state ~= "hogtied" then
+	local was_helped_state = previous_state and HELPED_STATES[previous_state]
+	if was_helped_state and not INCAPACITATED_STATES[current_state] and current_state ~= "dead" and current_state ~= "hogtied" then
 		if mod:get("trigger_revived_downed") then
+			trigger_focus()
+		end
+	end
+
+	local was_released_state = previous_state and RELEASED_STATES[previous_state]
+	if was_released_state and not INCAPACITATED_STATES[current_state] and current_state ~= "dead" and current_state ~= "hogtied" then
+		if mod:get("trigger_released") then
 			trigger_focus()
 		end
 	end
@@ -251,6 +340,10 @@ mod:hook_safe(CLASS.AttackReportManager, "add_attack_result", function(self, dam
 	local player_unit = player and player.player_unit
 
 	if player_unit and attacked_unit == player_unit then
+		if is_player_incapacitated(player_unit) then
+			return
+		end
+
 		if (damage and damage > 0) or (attack_result and attack_result ~= "dodged" and attack_result ~= "friendly_fire") then
 			trigger_focus()
 		end

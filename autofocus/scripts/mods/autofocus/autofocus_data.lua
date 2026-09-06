@@ -26,61 +26,81 @@ return {
 						type = "checkbox",
 						default_value = true,
 					},
+				},
+			},
+			{
+				setting_id = "triggers_combat",
+				type = "group",
+				tab = mod:localize("tab_combat"),
+				sub_widgets = {
 					{
-						setting_id = "triggers_group",
-						type = "group",
-						sub_widgets = {
-							{
-								setting_id = "trigger_on_hit",
-								type = "checkbox",
-								default_value = true,
-							},
-							{
-								setting_id = "trigger_rescued",
-								type = "checkbox",
-								default_value = true,
-							},
-							{
-								setting_id = "trigger_rescue_started",
-								type = "checkbox",
-								default_value = false,
-							},
-							{
-								setting_id = "trigger_revived_downed",
-								type = "checkbox",
-								default_value = true,
-							},
-							{
-								setting_id = "trigger_respawned_hogtied",
-								type = "checkbox",
-								default_value = false,
-							},
-							{
-								setting_id = "trigger_mission_vote",
-								type = "checkbox",
-								default_value = true,
-							},
-							{
-								setting_id = "trigger_pre_mission_lobby",
-								type = "checkbox",
-								default_value = true,
-							},
-							{
-								setting_id = "trigger_spawn_mission",
-								type = "checkbox",
-								default_value = true,
-							},
-							{
-								setting_id = "trigger_party_join_request",
-								type = "checkbox",
-								default_value = true,
-							},
-							{
-								setting_id = "trigger_reconnect_mission",
-								type = "checkbox",
-								default_value = true,
-							},
-						},
+						setting_id = "trigger_on_hit",
+						type = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id = "trigger_rescue_started",
+						type = "checkbox",
+						default_value = false,
+					},
+					{
+						setting_id = "trigger_revived_downed",
+						type = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id = "trigger_released",
+						type = "checkbox",
+						default_value = true,
+					},
+				},
+			},
+			{
+				setting_id = "triggers_respawn",
+				type = "group",
+				tab = mod:localize("tab_combat"),
+				sub_widgets = {
+					{
+						setting_id = "trigger_respawned_hogtied",
+						type = "checkbox",
+						default_value = false,
+					},
+					{
+						setting_id = "trigger_rescued",
+						type = "checkbox",
+						default_value = true,
+					},
+				},
+			},
+			{
+				setting_id = "triggers_matchmaking",
+				type = "group",
+				tab = mod:localize("tab_matchmaking"),
+				sub_widgets = {
+					{
+						setting_id = "trigger_spawn_mission",
+						type = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id = "trigger_pre_mission_lobby",
+						type = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id = "trigger_mission_vote",
+						type = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id = "trigger_party_join_request",
+						type = "checkbox",
+						default_value = true,
+					},
+					{
+						setting_id = "trigger_reconnect_mission",
+						type = "checkbox",
+						default_value = true,
 					},
 				},
 			},
