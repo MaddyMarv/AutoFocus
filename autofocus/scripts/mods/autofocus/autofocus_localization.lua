@@ -50,6 +50,12 @@ return {
 	trigger_spawn_mission = {
 		en = "When Spawning into Mission",
 	},
+	trigger_party_join_request = {
+		en = "When Request to Join Party Received",
+	},
+	trigger_reconnect_mission = {
+		en = "When Prompted to Reconnect to Mission",
+	},
 	play_sound = {
 		en = "Play Audio Alert",
 	},

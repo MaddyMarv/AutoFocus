@@ -282,12 +282,57 @@ mod:hook_safe(CLASS.VotingManager, "set_notification", function(self, voting_id,
 end)
 
 mod:hook_safe(CLASS.UIManager, "event_show_ui_popup", function(self, data)
-	if not mod:get("trigger_mission_vote") then
-		return
+	local title = data and data.title_text
+	local desc = data and data.description_text
+
+	if mod:get("trigger_mission_vote") then
+		if title and (title == "loc_accept_mission_voting_title_header" or string.find(title, "mission") or string.find(title, "voting")) then
+			trigger_focus()
+			return
+		end
 	end
 
-	local title = data and data.title_text
-	if title and (title == "loc_accept_mission_voting_title_header" or string.find(title, "mission") or string.find(title, "voting")) then
+	if mod:get("trigger_reconnect_mission") then
+		if (title and string.find(title, "reconnect")) or (desc and string.find(desc, "reconnect")) then
+			trigger_focus()
+			return
+		end
+	end
+
+	if mod:get("trigger_party_join_request") then
+		if title and (title == "loc_party_request_to_join_header" or title == "loc_social_party_invite_received_header" or title == "loc_group_finder_group_invite_popup_title" or string.find(title, "request_to_join") or string.find(title, "party_invite")) then
+			trigger_focus()
+			return
+		end
+	end
+end)
+
+mod:hook_safe(CLASS.StateMainMenu, "_show_reconnect_popup", function(self)
+	if mod:get("trigger_reconnect_mission") then
+		trigger_focus()
+	end
+end)
+
+mod:hook_safe(CLASS.MechanismHub, "_show_retry_popup", function(self)
+	if mod:get("trigger_reconnect_mission") then
+		trigger_focus()
+	end
+end)
+
+mod:hook_safe(CLASS.PartyImmateriumManager, "_request_to_join_popup", function(self)
+	if mod:get("trigger_party_join_request") then
+		trigger_focus()
+	end
+end)
+
+mod:hook_safe(CLASS.PartyImmateriumManager, "_handle_immaterium_invite", function(self)
+	if mod:get("trigger_party_join_request") then
+		trigger_focus()
+	end
+end)
+
+mod:hook_safe(CLASS.ConstantGroupFinderStatus, "start_player_request_anim_enter", function(self)
+	if mod:get("trigger_party_join_request") then
 		trigger_focus()
 	end
 end)

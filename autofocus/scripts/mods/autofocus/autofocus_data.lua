@@ -70,6 +70,16 @@ return {
 								type = "checkbox",
 								default_value = true,
 							},
+							{
+								setting_id = "trigger_party_join_request",
+								type = "checkbox",
+								default_value = true,
+							},
+							{
+								setting_id = "trigger_reconnect_mission",
+								type = "checkbox",
+								default_value = true,
+							},
 						},
 					},
 				},
