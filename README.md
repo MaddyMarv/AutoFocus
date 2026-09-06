@@ -6,6 +6,7 @@ Standalone mod that automatically brings the Darktide game window into view over
 **Options:**
 - Focus Method [Full Focus (Bring to Front & Grab Input), Bring to View (Don't Steal Input), Flash Taskbar Only]
 - Play Audio Alert
+  
 **Combat & Recovery Triggers:**
 - When Hit / Taking Damage
 - When Teammate Starts Rescuing
@@ -13,6 +14,7 @@ Standalone mod that automatically brings the Darktide game window into view over
 - When Released (Grabs / Swallowed)
 - When Respawned Awaiting Rescue
 - When Rescued (hogtied)
+  
 **Matchmaking & Lobby Triggers:**
 - When Spawning into Mission
 - When Loading into Pre-Mission Lobby
