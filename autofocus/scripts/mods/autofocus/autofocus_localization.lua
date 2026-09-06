@@ -3,7 +3,7 @@ return {
 		en = "AutoFocus",
 	},
 	mod_description = {
-		en = "Automatically brings the game window into view over other tabs or flashes the taskbar when you are rescued, revived, or awaiting rescue.",
+		en = "Brings Darktide to the front when important events happen (matchmaking, loading into a lobby, taking damage, or being rescued).",
 	},
 	tab_general = {
 		en = "General",
