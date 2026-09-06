@@ -4,6 +4,8 @@
 Standalone mod that automatically brings the Darktide game window into view over other tabs when important events occur. Perfect for when you tab out while waiting for a mission vote, lobby loading, or waiting for your team to reach your respawn point.
 
 **Options:**
+
+**General**
 - Focus Method [Full Focus (Bring to Front & Grab Input), Bring to View (Don't Steal Input), Flash Taskbar Only]
 - Play Audio Alert
 
