@@ -1,0 +1,27 @@
+Standalone mod that automatically brings the Darktide game window into view over other tabs when important events occur. Perfect for when you tab out while waiting for a mission vote, lobby loading, or waiting for your team to reach your respawn point.
+
+[b]Options:[/b]
+
+[b]General[/b]
+- Focus Method [Full Focus (Bring to Front & Grab Input), Bring to View (Don't Steal Input), Flash Taskbar Only]
+- Play Audio Alert
+
+[b]Combat & Recovery Triggers[/b]
+- When Hit / Taking Damage
+- When Teammate Starts Rescuing
+- When Helped (Downed, Dogged, Netted, etc...)
+- When Released (Grabs / Swallowed)
+- When Respawned Awaiting Rescue
+- When Rescued (hogtied)
+
+[b]Matchmaking & Lobby Triggers[/b]
+- When Spawning into Mission
+- When Loading into Pre-Mission Lobby
+- When Asked to Accept Mission
+- When Request to Join Party Received
+- When Prompted to Reconnect to Mission
+
+[b]Commands:[/b]
+- /test_autofocus - Test AutoFocus window focus and alerting with a 3-second delay.
+
+[b]Links:[/b] [url=https://github.com/MaddyMarv/AutoFocus]Source Code[/url] | [url=https://www.nexusmods.com/profile/indicabunny]Nexus Mods Profile[/url] | [url=https://ko-fi.com/indicabunny]Support Me on Ko-fi[/url]
