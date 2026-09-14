@@ -208,6 +208,24 @@ local function is_player_incapacitated(player_unit)
 	return state_name and INCAPACITATED_STATES[state_name] or false
 end
 
+local function get_local_player()
+	local player_manager = Managers.player
+	if not player_manager then
+		return nil
+	end
+
+	if player_manager.local_player_safe then
+		return player_manager:local_player_safe(1)
+	end
+
+	local connection_manager = Managers.connection
+	if connection_manager and connection_manager:is_initialized() and player_manager.local_player then
+		return player_manager:local_player(1)
+	end
+
+	return nil
+end
+
 local previous_state = nil
 local was_being_assisted = false
 local was_dead = false
@@ -227,8 +245,7 @@ mod.update = function(dt)
 		end
 	end
 
-	local player_manager = Managers.player
-	local player = player_manager and player_manager:local_player(1)
+	local player = get_local_player()
 	local player_unit = player and player.player_unit
 
 	if not player_unit or not Unit.alive(player_unit) then
@@ -335,8 +352,7 @@ mod:hook_safe(CLASS.AttackReportManager, "add_attack_result", function(self, dam
 		return
 	end
 
-	local player_manager = Managers.player
-	local player = player_manager and player_manager:local_player(1)
+	local player = get_local_player()
 	local player_unit = player and player.player_unit
 
 	if player_unit and attacked_unit == player_unit then
