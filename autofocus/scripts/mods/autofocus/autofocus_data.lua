@@ -98,6 +98,11 @@ return {
 						default_value = true,
 					},
 					{
+						setting_id = "trigger_party_finder_request",
+						type = "checkbox",
+						default_value = false,
+					},
+					{
 						setting_id = "trigger_reconnect_mission",
 						type = "checkbox",
 						default_value = true,

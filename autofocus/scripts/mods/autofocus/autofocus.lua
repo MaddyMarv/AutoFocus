@@ -408,8 +408,15 @@ mod:hook_safe(CLASS.UIManager, "event_show_ui_popup", function(self, data)
 		end
 	end
 
+	if mod:get("trigger_party_finder_request") then
+		if title and (title == "loc_group_finder_group_invite_popup_title" or string.find(title, "group_finder")) then
+			trigger_focus()
+			return
+		end
+	end
+
 	if mod:get("trigger_party_join_request") then
-		if title and (title == "loc_party_request_to_join_header" or title == "loc_social_party_invite_received_header" or title == "loc_group_finder_group_invite_popup_title" or string.find(title, "request_to_join") or string.find(title, "party_invite")) then
+		if title and (title == "loc_party_request_to_join_header" or title == "loc_social_party_invite_received_header" or string.find(title, "request_to_join") or string.find(title, "party_invite")) then
 			trigger_focus()
 			return
 		end
@@ -434,14 +441,22 @@ mod:hook_safe(CLASS.PartyImmateriumManager, "_request_to_join_popup", function(s
 	end
 end)
 
-mod:hook_safe(CLASS.PartyImmateriumManager, "_handle_immaterium_invite", function(self)
-	if mod:get("trigger_party_join_request") then
-		trigger_focus()
+mod:hook_safe(CLASS.PartyImmateriumManager, "_handle_immaterium_invite", function(self, party_id, invite_token, inviter_account_id)
+	local is_group_finder = inviter_account_id == "00000000-0000-0000-0000-000000000000"
+
+	if is_group_finder then
+		if mod:get("trigger_party_finder_request") then
+			trigger_focus()
+		end
+	else
+		if mod:get("trigger_party_join_request") then
+			trigger_focus()
+		end
 	end
 end)
 
 mod:hook_safe(CLASS.ConstantGroupFinderStatus, "start_player_request_anim_enter", function(self)
-	if mod:get("trigger_party_join_request") then
+	if mod:get("trigger_party_finder_request") then
 		trigger_focus()
 	end
 end)
