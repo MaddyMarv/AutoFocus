@@ -1,6 +1,6 @@
 return {
 	run = function()
-		fassert(rawget(_G, "new_mod"), "`autofocus` mod must be lower than DMF in load order.")
+		fassert(rawget(_G, "new_mod"), "`autofocus` encountered an error loading the Darktide Mod Framework.")
 
 		new_mod("autofocus", {
 			mod_script       = "autofocus/scripts/mods/autofocus/autofocus",
