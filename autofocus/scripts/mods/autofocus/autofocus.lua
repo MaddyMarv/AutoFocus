@@ -26,6 +26,22 @@ if ffi then
 	end)
 end
 
+local is_wine = false
+if ffi then
+	pcall(function()
+		ffi.cdef[[
+			const char* wine_get_version(void);
+		]]
+		local ntdll = ffi.load("ntdll.dll")
+		if ntdll and ntdll.wine_get_version then
+			local ver = ntdll.wine_get_version()
+			if ver ~= nil then
+				is_wine = true
+			end
+		end
+	end)
+end
+
 local HWND_TOPMOST = ffi and ffi.cast("HWND", -1) or nil
 local HWND_NOTOPMOST = ffi and ffi.cast("HWND", -2) or nil
 local SWP_NOSIZE = 0x0001
@@ -68,8 +84,14 @@ local function trigger_focus(ignore_current_focus)
 	end
 
 	local has_focus = rawget(_G, "Window") and Window.has_focus and Window.has_focus()
+	local hwnd = get_darktide_hwnd()
+	local is_fg = false
+	if ffi and hwnd and hwnd ~= ffi.cast("HWND", 0) then
+		local fg_wnd = ffi.C.GetForegroundWindow()
+		is_fg = (fg_wnd ~= nil and fg_wnd == hwnd)
+	end
 
-	if not ignore_current_focus and has_focus then
+	if not ignore_current_focus and (has_focus or is_fg) then
 		return
 	end
 
@@ -97,20 +119,28 @@ local function trigger_focus(ignore_current_focus)
 	end
 
 	if focus_method == "bring_to_view" and ffi then
-		local hwnd = get_darktide_hwnd()
-
 		if hwnd and hwnd ~= ffi.cast("HWND", 0) then
 			ffi.C.ShowWindow(hwnd, SW_SHOWNOACTIVATE)
-			ffi.C.SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW + SWP_NOACTIVATE)
-			ffi.C.SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW + SWP_NOACTIVATE)
+			if not is_wine then
+				ffi.C.SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW + SWP_NOACTIVATE)
+				ffi.C.SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW + SWP_NOACTIVATE)
+			else
+				ffi.C.BringWindowToTop(hwnd)
+			end
 		end
 		return
 	end
 
-	if ffi then
-		local hwnd = get_darktide_hwnd()
+	local use_clean_focus = is_wine
 
-		if hwnd and hwnd ~= ffi.cast("HWND", 0) then
+	if ffi and hwnd and hwnd ~= ffi.cast("HWND", 0) then
+		if use_clean_focus then
+			ffi.C.ShowWindow(hwnd, SW_RESTORE)
+			ffi.C.BringWindowToTop(hwnd)
+			ffi.C.SetForegroundWindow(hwnd)
+			ffi.C.SetActiveWindow(hwnd)
+			ffi.C.SetFocus(hwnd)
+		else
 			local fg_wnd = ffi.C.GetForegroundWindow()
 			local fg_thread = (fg_wnd and fg_wnd ~= ffi.cast("HWND", 0)) and ffi.C.GetWindowThreadProcessId(fg_wnd, nil) or 0
 			local cur_thread = ffi.C.GetCurrentThreadId()
