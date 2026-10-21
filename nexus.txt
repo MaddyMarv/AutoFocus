@@ -1,7 +1,7 @@
 Brings Darktide to the front when important events happen (matchmaking, loading into a lobby, taking damage, or being rescued).
 
-[b]Options:[/b]
-
+[b]Mod Settings / Commands:[/b]
+[spoiler]
 [b]General[/b]
 - Focus Method [Full Focus (Bring to Front & Grab Input), Bring to View (Don't Steal Input), Flash Taskbar Only]
 - Play Audio Alert
@@ -23,6 +23,7 @@ Brings Darktide to the front when important events happen (matchmaking, loading 
 
 [b]Commands:[/b]
 - /test_autofocus - Test AutoFocus window focus and alerting with a 3-second delay.
+[/spoiler]
 
 [b]Links:[/b]
 [url=https://github.com/MaddyMarv/AutoFocus]Source Code[/url] | [url=https://www.nexusmods.com/profile/indicabunny]Nexus Mods Profile[/url] | [url=https://ko-fi.com/indicabunny]Support Me on Ko-fi[/url]
