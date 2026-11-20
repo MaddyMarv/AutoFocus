@@ -2,16 +2,16 @@
     "name": "AutoFocus",
     "author": "IndicaBunny",
     "version": "1.5",
-    "homepage": "https://www.nexusmods.com/games/warhammer40kdarktide/mods/1261",
+    "homepage": "https://www.nexusmods.com/warhammer40kdarktide/mods/1261",
     "source": "https://github.com/MaddyMarv/AutoFocus",
     "funding": {
         "kofi": "https://ko-fi.com/indicabunny"
     },
     "description": "Brings Darktide to the front when important events happen (matchmaking, loading into a lobby, taking damage, or being rescued).",
-    "order": {
-        "require": [],
-        "this_before": [],
-        "this_after": []
+    "dependencies": {
+        "required": [],
+        "self_after": [],
+        "self_before": []
     },
     "localization": {}
 }

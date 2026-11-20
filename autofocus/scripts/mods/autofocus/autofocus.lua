@@ -4,7 +4,7 @@ local ffi = rawget(_G, "Mods") and Mods.lua and Mods.lua.ffi
 
 if ffi then
 	pcall(function()
-		ffi.cdef[[
+		ffi.cdef [[
 			typedef void* HWND;
 			typedef int BOOL;
 			typedef unsigned int UINT;
@@ -29,7 +29,7 @@ end
 local is_wine = false
 if ffi then
 	pcall(function()
-		ffi.cdef[[
+		ffi.cdef [[
 			const char* wine_get_version(void);
 		]]
 		local ntdll = ffi.load("ntdll.dll")
@@ -122,8 +122,24 @@ local function trigger_focus(ignore_current_focus)
 		if hwnd and hwnd ~= ffi.cast("HWND", 0) then
 			ffi.C.ShowWindow(hwnd, SW_SHOWNOACTIVATE)
 			if not is_wine then
-				ffi.C.SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW + SWP_NOACTIVATE)
-				ffi.C.SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW + SWP_NOACTIVATE)
+				ffi.C.SetWindowPos(
+					hwnd,
+					HWND_TOPMOST,
+					0,
+					0,
+					0,
+					0,
+					SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW + SWP_NOACTIVATE
+				)
+				ffi.C.SetWindowPos(
+					hwnd,
+					HWND_NOTOPMOST,
+					0,
+					0,
+					0,
+					0,
+					SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW + SWP_NOACTIVATE
+				)
 			else
 				ffi.C.BringWindowToTop(hwnd)
 			end
@@ -142,7 +158,8 @@ local function trigger_focus(ignore_current_focus)
 			ffi.C.SetFocus(hwnd)
 		else
 			local fg_wnd = ffi.C.GetForegroundWindow()
-			local fg_thread = (fg_wnd and fg_wnd ~= ffi.cast("HWND", 0)) and ffi.C.GetWindowThreadProcessId(fg_wnd, nil) or 0
+			local fg_thread = (fg_wnd and fg_wnd ~= ffi.cast("HWND", 0)) and ffi.C.GetWindowThreadProcessId(fg_wnd, nil)
+				or 0
 			local cur_thread = ffi.C.GetCurrentThreadId()
 
 			if fg_thread ~= 0 and fg_thread ~= cur_thread then
@@ -339,14 +356,24 @@ mod.update = function(dt)
 	end
 
 	local was_helped_state = previous_state and HELPED_STATES[previous_state]
-	if was_helped_state and not INCAPACITATED_STATES[current_state] and current_state ~= "dead" and current_state ~= "hogtied" then
+	if
+		was_helped_state
+		and not INCAPACITATED_STATES[current_state]
+		and current_state ~= "dead"
+		and current_state ~= "hogtied"
+	then
 		if mod:get("trigger_revived_downed") then
 			trigger_focus()
 		end
 	end
 
 	local was_released_state = previous_state and RELEASED_STATES[previous_state]
-	if was_released_state and not INCAPACITATED_STATES[current_state] and current_state ~= "dead" and current_state ~= "hogtied" then
+	if
+		was_released_state
+		and not INCAPACITATED_STATES[current_state]
+		and current_state ~= "dead"
+		and current_state ~= "hogtied"
+	then
 		if mod:get("trigger_released") then
 			trigger_focus()
 		end
@@ -377,24 +404,41 @@ mod.on_game_state_changed = function(status, state_name)
 	previous_toughness = nil
 end
 
-mod:hook_safe(CLASS.AttackReportManager, "add_attack_result", function(self, damage_profile, attacked_unit, attacking_unit, attack_direction, hit_world_position, hit_weakspot, damage, attack_result)
-	if not mod:get("trigger_on_hit") then
-		return
-	end
-
-	local player = get_local_player()
-	local player_unit = player and player.player_unit
-
-	if player_unit and attacked_unit == player_unit then
-		if is_player_incapacitated(player_unit) then
+mod:hook_safe(
+	CLASS.AttackReportManager,
+	"add_attack_result",
+	function(
+		self,
+		damage_profile,
+		attacked_unit,
+		attacking_unit,
+		attack_direction,
+		hit_world_position,
+		hit_weakspot,
+		damage,
+		attack_result
+	)
+		if not mod:get("trigger_on_hit") then
 			return
 		end
 
-		if (damage and damage > 0) or (attack_result and attack_result ~= "dodged" and attack_result ~= "friendly_fire") then
-			trigger_focus()
+		local player = get_local_player()
+		local player_unit = player and player.player_unit
+
+		if player_unit and attacked_unit == player_unit then
+			if is_player_incapacitated(player_unit) then
+				return
+			end
+
+			if
+				(damage and damage > 0)
+				or (attack_result and attack_result ~= "dodged" and attack_result ~= "friendly_fire")
+			then
+				trigger_focus()
+			end
 		end
 	end
-end)
+)
 
 mod:hook_safe(CLASS.GameplayStateRun, "on_enter", function(self, parent, params)
 	local mechanism_manager = Managers.mechanism
@@ -425,7 +469,14 @@ mod:hook_safe(CLASS.UIManager, "event_show_ui_popup", function(self, data)
 	local desc = data and data.description_text
 
 	if mod:get("trigger_mission_vote") then
-		if title and (title == "loc_accept_mission_voting_title_header" or string.find(title, "mission") or string.find(title, "voting")) then
+		if
+			title
+			and (
+				title == "loc_accept_mission_voting_title_header"
+				or string.find(title, "mission")
+				or string.find(title, "voting")
+			)
+		then
 			trigger_focus()
 			return
 		end
@@ -446,7 +497,15 @@ mod:hook_safe(CLASS.UIManager, "event_show_ui_popup", function(self, data)
 	end
 
 	if mod:get("trigger_party_join_request") then
-		if title and (title == "loc_party_request_to_join_header" or title == "loc_social_party_invite_received_header" or string.find(title, "request_to_join") or string.find(title, "party_invite")) then
+		if
+			title
+			and (
+				title == "loc_party_request_to_join_header"
+				or title == "loc_social_party_invite_received_header"
+				or string.find(title, "request_to_join")
+				or string.find(title, "party_invite")
+			)
+		then
 			trigger_focus()
 			return
 		end
@@ -471,19 +530,23 @@ mod:hook_safe(CLASS.PartyImmateriumManager, "_request_to_join_popup", function(s
 	end
 end)
 
-mod:hook_safe(CLASS.PartyImmateriumManager, "_handle_immaterium_invite", function(self, party_id, invite_token, inviter_account_id)
-	local is_group_finder = inviter_account_id == "00000000-0000-0000-0000-000000000000"
+mod:hook_safe(
+	CLASS.PartyImmateriumManager,
+	"_handle_immaterium_invite",
+	function(self, party_id, invite_token, inviter_account_id)
+		local is_group_finder = inviter_account_id == "00000000-0000-0000-0000-000000000000"
 
-	if is_group_finder then
-		if mod:get("trigger_party_finder_request") then
-			trigger_focus()
-		end
-	else
-		if mod:get("trigger_party_join_request") then
-			trigger_focus()
+		if is_group_finder then
+			if mod:get("trigger_party_finder_request") then
+				trigger_focus()
+			end
+		else
+			if mod:get("trigger_party_join_request") then
+				trigger_focus()
+			end
 		end
 	end
-end)
+)
 
 mod:hook_safe(CLASS.ConstantGroupFinderStatus, "start_player_request_anim_enter", function(self)
 	if mod:get("trigger_party_finder_request") then
