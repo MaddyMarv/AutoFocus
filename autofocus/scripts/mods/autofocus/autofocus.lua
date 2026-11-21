@@ -562,7 +562,6 @@ end)
 
 mod:command("test_autofocus", mod:localize("cmd_test_autofocus"), function()
 	mod:echo("Testing AutoFocus in 3 seconds... Tab out now to test!")
-	local t = 0
 	local test_cb
 	test_cb = function()
 		trigger_focus(true)
