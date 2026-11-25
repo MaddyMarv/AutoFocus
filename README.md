@@ -10,7 +10,7 @@ Brings Darktide to the front when important events happen (matchmaking, loading 
 - Focus Method [Full Focus (Bring to Front & Grab Input), Bring to View (Don't Steal Input), Flash Taskbar Only]
 - Play Audio Alert
 
-**Combat & Recovery Triggers**
+**Combat & Recovery**
 - When Hit / Taking Damage
 - When Teammate Starts Rescuing
 - When Helped (Downed, Dogged, Netted, etc...)
@@ -18,11 +18,12 @@ Brings Darktide to the front when important events happen (matchmaking, loading 
 - When Respawned Awaiting Rescue
 - When Rescued (hogtied)
 
-**Matchmaking & Lobby Triggers**
+**Matchmaking & Lobby**
 - When Spawning into Mission
 - When Loading into Pre-Mission Lobby
 - When Asked to Accept Mission
 - When Request to Join Party Received
+- When Party Finder Request Received
 - When Prompted to Reconnect to Mission
 
 **Commands:**
